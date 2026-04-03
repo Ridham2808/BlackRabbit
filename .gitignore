@@ -1,0 +1,65 @@
+# ─── Environment ────────────────────────────────────────────
+.env
+.env.local
+.env.production
+.env.example
+
+# ─── Node ───────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.pnp
+.pnp.js
+
+# ─── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+*.egg
+.pytest_cache/
+.mypy_cache/
+ai-service/models/*.pkl
+ai-service/models/*.joblib
+
+# ─── Uploads ────────────────────────────────────────────────
+backend/uploads/
+
+# ─── Docker ─────────────────────────────────────────────────
+.docker/
+
+# ─── OS ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ───────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# ─── IDE ────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ─── Expo / Mobile ──────────────────────────────────────────
+mobile/.expo/
+mobile/android/
+mobile/ios/
+mobile/*.apk
+mobile/*.aab
+
+# ─── SSL certs (never commit) ───────────────────────────────
+nginx/ssl/
+*.pem
+*.key
+*.crt
