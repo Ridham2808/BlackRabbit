@@ -1,17 +1,54 @@
-# ─── Environment ────────────────────────────────────────────
+# ============================================================
+# BlackRabbit / DEAS — .gitignore
+# ============================================================
+
+# ─── Environment & Secrets (NEVER commit) ───────────────────
 .env
 .env.local
 .env.production
-.env.example
+.env.staging
+.env.development
+.env.test
+# BUT commit the safe example template:
+!.env.example
 
-# ─── Node ───────────────────────────────────────────────────
+# Sub-project env files
+backend/.env
+backend/.env.*
+mobile/.env
+mobile/.env.*
+web/.env
+web/.env.*
+!web/.env.example
+!mobile/.env.example
+!backend/.env.example
+
+# ─── SSL / Certificates / Keys ───────────────────────────────
+*.pem
+*.key
+*.crt
+*.p8
+*.p12
+*.jks
+*.mobileprovision
+nginx/ssl/
+
+# ─── Node.js ─────────────────────────────────────────────────
 node_modules/
-dist/
-build/
 .pnp
 .pnp.js
+package-lock.json
+# Uncomment if you want to commit lockfiles (recommended for reproducibility):
+# !package-lock.json
 
-# ─── Python ─────────────────────────────────────────────────
+# ─── Build Outputs ───────────────────────────────────────────
+dist/
+build/
+.next/
+out/
+web-build/
+
+# ─── Python ──────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
@@ -20,46 +57,81 @@ __pycache__/
 .venv/
 venv/
 env/
+ENV/
 *.egg-info/
-dist/
 *.egg
 .pytest_cache/
 .mypy_cache/
 ai-service/models/*.pkl
 ai-service/models/*.joblib
 
-# ─── Uploads ────────────────────────────────────────────────
+# ─── Uploads (user-generated data) ──────────────────────────
 backend/uploads/
+uploads/
 
-# ─── Docker ─────────────────────────────────────────────────
-.docker/
-
-# ─── OS ─────────────────────────────────────────────────────
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ─── Logs ───────────────────────────────────────────────────
+# ─── Logs ────────────────────────────────────────────────────
 *.log
 logs/
+backend/logs/
 npm-debug.log*
 yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# ─── IDE ────────────────────────────────────────────────────
-.vscode/settings.json
-.idea/
+# ─── Docker volumes/local data ───────────────────────────────
+.docker/
+postgres_data/
+redis_data/
+
+# ─── Temporary / Scratch files ───────────────────────────────
+tmp/
+temp/
+*.tmp
+*.bak
 *.swp
 *.swo
 
-# ─── Expo / Mobile ──────────────────────────────────────────
+# Debug / test scripts (one-off utility scripts)
+backend/check_demo.js
+backend/debug_require.js
+backend/fix_base_id.js
+backend/fix_mobile_demo.js
+backend/run_migration.js
+backend/test_checkin.js
+backend/test_checkout.js
+backend/verify_feature_9.js
+backend/db_schema.js
+
+# ─── OS Generated ────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── IDE / Editor ────────────────────────────────────────────
+.vscode/settings.json
+.vscode/*.code-workspace
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.tsbuildinfo
+
+# ─── Expo / React Native ─────────────────────────────────────
 mobile/.expo/
 mobile/android/
 mobile/ios/
+mobile/.kotlin/
 mobile/*.apk
 mobile/*.aab
+mobile/expo-env.d.ts
+.metro-health-check*
 
-# ─── SSL certs (never commit) ───────────────────────────────
-nginx/ssl/
-*.pem
-*.key
-*.crt
+# ─── Audit / internal metadata ───────────────────────────────
+logs/.*.json
