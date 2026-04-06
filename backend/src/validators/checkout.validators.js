@@ -13,7 +13,8 @@ const createCheckoutSchema = Joi.object({
   biometric_type:        Joi.string().valid('FINGERPRINT','FACE_ID','PIN_OVERRIDE').optional(),
   checkout_latitude:     Joi.number().min(-90).max(90).optional(),
   checkout_longitude:    Joi.number().min(-180).max(180).optional(),
-  notes:                 Joi.string().max(500).optional(),
+  assigned_user_id:      Joi.string().uuid().optional().allow(null),
+  request_id:            Joi.string().uuid().optional().allow(null),
 });
 
 const checkInSchema = Joi.object({
