@@ -9,9 +9,10 @@ const logger = require('./logger');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  max:             parseInt(process.env.DB_POOL_MAX, 10)              || 20,
+  max:               parseInt(process.env.DB_POOL_MAX, 10)              || 20,
   idleTimeoutMillis: parseInt(process.env.DB_POOL_IDLE_TIMEOUT_MS, 10) || 30000,
-  connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT_MS, 10) || 5000,
+  // Neon.tech serverless can take up to ~15s on cold start — raise the timeout
+  connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT_MS, 10) || 15000,
 });
 
 pool.on('connect', () => {
@@ -19,8 +20,8 @@ pool.on('connect', () => {
 });
 
 pool.on('error', (err) => {
+  // Log but do NOT exit — transient Neon idle-client errors should not crash the server
   logger.error('PostgreSQL pool: unexpected error on idle client', { error: err.message });
-  process.exit(1);
 });
 
 /**
@@ -88,9 +89,17 @@ async function withTransaction(fn) {
 /**
  * Test the connection — used in /health and startup
  */
-async function testConnection() {
-  const result = await query('SELECT NOW() as time, current_database() as db');
-  return result.rows[0];
+async function testConnection(retries = 3, delayMs = 3000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const result = await query('SELECT NOW() as time, current_database() as db');
+      return result.rows[0];
+    } catch (err) {
+      if (attempt === retries) throw err;
+      logger.warn(`PostgreSQL connect attempt ${attempt}/${retries} failed — retrying in ${delayMs}ms`, { error: err.message });
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+  }
 }
 
 module.exports = { query, getClient, withTransaction, testConnection, pool };
