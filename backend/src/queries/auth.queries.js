@@ -3,31 +3,27 @@
 // ============================================================
 
 const AUTH_QUERIES = {
-  FIND_BY_EMAIL: `
-    SELECT id, service_number, full_name, email, password_hash,
-           role, rank, unit_id, base_id, clearance_level,
-           is_active, failed_login_count, locked_until,
-           device_token, refresh_token_hash, biometric_token_hash
-    FROM personnel
-    WHERE email = $1 AND is_deleted = false
+  FIND_BY_SERVICE_NUMBER: `
+    SELECT p.*, u.name as unit_name, b.name as base_name, b.id as base_id 
+    FROM personnel p 
+    LEFT JOIN units u ON p.unit_id = u.id 
+    LEFT JOIN bases b ON p.base_id = b.id 
+    WHERE p.service_number = $1 AND p.is_deleted = false
     LIMIT 1
   `,
 
   FIND_BY_ID: `
-    SELECT p.id, p.service_number, p.full_name, p.email,
-           p.role, p.rank, p.unit_id, p.base_id, p.clearance_level,
-           p.is_active, p.avatar_url, p.device_token,
-           u.name AS unit_name, b.name AS base_name
-    FROM personnel p
-    LEFT JOIN units u ON u.id = p.unit_id
-    LEFT JOIN bases b ON b.id = p.base_id
+    SELECT p.*, u.name as unit_name, b.name as base_name, b.id as base_id 
+    FROM personnel p 
+    LEFT JOIN units u ON p.unit_id = u.id 
+    LEFT JOIN bases b ON p.base_id = b.id 
     WHERE p.id = $1 AND p.is_deleted = false
     LIMIT 1
   `,
 
-  UPDATE_LOGIN_SUCCESS: `
+  RESET_FAILED_LOGIN: `
     UPDATE personnel
-    SET last_login_at = NOW(), failed_login_count = 0, locked_until = NULL
+    SET failed_login_count = 0, locked_until = NULL, last_login_at = NOW()
     WHERE id = $1
   `,
 
@@ -40,7 +36,7 @@ const AUTH_QUERIES = {
 
   LOCK_ACCOUNT: `
     UPDATE personnel
-    SET locked_until = NOW() + ($2 || ' minutes')::INTERVAL
+    SET locked_until = NOW() + INTERVAL '15 minutes'
     WHERE id = $1
   `,
 
