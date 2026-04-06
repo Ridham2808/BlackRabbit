@@ -8,9 +8,9 @@ const { ALERT_TYPES }  = require('../constants/alertTypes');
 const logger           = require('../config/logger');
 
 const ESCALATION_THRESHOLDS = [
-  { hoursOverdue: 2,  level: 1, description: 'Escalate to Field Officer' },
-  { hoursOverdue: 6,  level: 2, description: 'Escalate to Quartermaster' },
-  { hoursOverdue: 24, level: 3, description: 'Escalate to Base Admin — URGENT' },
+  { hoursOverdue: 0.5, level: 1, description: 'Escalate to Officer — Overdue 30 mins' },
+  { hoursOverdue: 1.0, level: 2, description: 'CRITICAL — Equipment Unaccounted 1 hour' },
+  { hoursOverdue: 24.0, level: 3, description: 'EMERGENCY — Base Admin Intervention Required' },
 ];
 
 async function runAlertEscalation() {
