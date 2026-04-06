@@ -1,71 +1,58 @@
 // ============================================================
-// AUTHORIZE MIDDLEWARE — RBAC permission check
-// Usage: authorize('equipment:checkout', 'equipment:create')
-// Passes if user has ANY ONE of the listed permissions
+// AUTHORIZE MIDDLEWARE — RBAC (SECTION 4)
 // ============================================================
 
-const { hasAnyPermission } = require('../constants/rolePermissions');
-const { AUDIT_ACTIONS } = require('../constants/alertTypes');
-const { DEVICE_TYPE } = require('../constants/statusTypes');
+const { ROLE_PERMISSIONS } = require('../constants/rolePermissions');
+const auditService = require('../services/audit.service');
 const logger = require('../config/logger');
 
 /**
- * Factory — returns middleware that checks for any of the given permissions
- * @param {...string} requiredPermissions
+ * RBAC Factory — returns middleware to check for required permissions.
+ * @param {...string} requiredPermissions 
  */
 function authorize(...requiredPermissions) {
   return async (req, res, next) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ success: false, message: 'Not authenticated' });
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
       }
 
-      const { role, id: userId, baseId, fullName, serviceNumber } = req.user;
+      const userRole = user.role;
+      const userPermissions = ROLE_PERMISSIONS[userRole] || [];
 
-      // SUPER_ADMIN bypasses all permission checks
-      if (role === 'SUPER_ADMIN') return next();
+      // Check if user has ANY of the required permissions
+      const hasPermission = requiredPermissions.some(perm => userPermissions.includes(perm));
 
-      const allowed = hasAnyPermission(role, requiredPermissions);
-
-      if (!allowed) {
-        // Log unauthorized access attempt to audit
-        try {
-          const { query } = require('../config/database');
-          await query(
-            `INSERT INTO audit_logs
-              (action, performed_by_id, performed_by_name, performed_by_role,
-               performed_by_service_number, target_entity_type,
-               ip_address, user_agent, device_type, severity, additional_context)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'CRITICAL',$10)`,
-            [
-              AUDIT_ACTIONS.UNAUTHORIZED_ACCESS_ATTEMPT,
-              userId, fullName, role, serviceNumber,
-              'SYSTEM',
-              req.ip,
-              req.headers['user-agent'],
-              req.headers['x-device-type'] || DEVICE_TYPE.WEB,
-              JSON.stringify({
-                attempted_path:        req.originalUrl,
-                method:                req.method,
-                required_permissions:  requiredPermissions,
-                user_role:             role,
-              }),
-            ]
-          );
-        } catch (auditErr) {
-          logger.error('Failed to write unauthorized access audit', { error: auditErr.message });
-        }
-
-        logger.warn('Access denied', {
-          userId, role,
-          path:                req.originalUrl,
-          required_permissions: requiredPermissions,
-          ip:                  req.ip,
+      if (!hasPermission) {
+        // Detailed Audit Log for unauthorized attempt
+        await auditService.createLog({
+          action: 'UNAUTHORIZED_ACCESS_ATTEMPT',
+          performedBy: { 
+            id:             user.id, 
+            role:           user.role, 
+            service_number: user.serviceNumber 
+          },
+          ip: req.ip,
+          additionalContext: {
+            endpoint:            req.originalUrl,
+            method:              req.method,
+            requiredPermissions: requiredPermissions,
+            userRole:            userRole,
+            userPermissions:     userPermissions // "maximum detail" as requested
+          }
         });
 
-        return res.status(403).json({
-          success: false,
-          message: 'Access denied. Insufficient permissions.',
+        logger.warn('Forbidden access attempt', {
+          userId: user.id,
+          role:   userRole,
+          path:   req.originalUrl,
+        });
+
+        // Generic error message to prevent information leakage
+        return res.status(403).json({ 
+          success: false, 
+          message: 'Access denied' 
         });
       }
 
@@ -77,4 +64,4 @@ function authorize(...requiredPermissions) {
   };
 }
 
-module.exports = authorize;
+module.exports = { authorize };
