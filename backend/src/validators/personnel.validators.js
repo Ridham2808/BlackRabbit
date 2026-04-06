@@ -28,11 +28,11 @@ const updatePersonnelSchema = Joi.object({
 
 const listPersonnelSchema = Joi.object({
   page:    Joi.number().integer().min(1).default(1),
-  limit:   Joi.number().integer().min(1).max(100).default(20),
+  limit:   Joi.number().integer().min(1).max(2000).default(20),
   role:    Joi.string().optional(),
   base_id: Joi.string().uuid().optional(),
   unit_id: Joi.string().uuid().optional(),
-  search:  Joi.string().max(100).optional(),
+  search:  Joi.string().max(100).allow('').optional(),
   active:  Joi.boolean().optional(),
 });
 
