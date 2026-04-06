@@ -16,7 +16,15 @@ module.exports = {
     }
 
     const results = [];
-    for (const action of actions) {
+    
+    // Sort actions by timestamp to ensure CHECKOUT before CHECKIN, etc.
+    const sortedActions = [...actions].sort((a, b) => {
+      const timeA = new Date(a.payload?.offline_timestamp || a.clientTimestamp || 0);
+      const timeB = new Date(b.payload?.offline_timestamp || b.clientTimestamp || 0);
+      return timeA - timeB;
+    });
+
+    for (const action of sortedActions) {
       try {
         let result;
         if (action.type === 'CHECKOUT')       result = await checkoutService.checkout(action.payload, req.user);
