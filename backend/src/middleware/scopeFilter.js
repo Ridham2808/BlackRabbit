@@ -1,48 +1,58 @@
 // ============================================================
-// SCOPE FILTER MIDDLEWARE
-// Injects row-level security filters based on user's role
-// Must run AFTER authenticate middleware
-// Controllers read req.scope to build WHERE clauses
+// SCOPE FILTER MIDDLEWARE — MULTI-TENANCY ISOLATION (SECTION 4)
 // ============================================================
 
-const ROLES = require('../constants/roles');
+const logger = require('../config/logger');
 
-function scopeFilter(req, res, next) {
-  if (!req.user) return next();
+/**
+ * After authentication, injects req.scope to filter queries.
+ * Based on user role as specified in requirements.
+ */
+module.exports = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) return next(); // Should be caught by authenticate
 
-  const { role, baseId, unitId, id: userId } = req.user;
+    const { role, id, baseId, unitId } = user;
+    let scope = {};
 
-  switch (role) {
-    case ROLES.SUPER_ADMIN:
-    case ROLES.AUDITOR:
-      // Full access — no restrictions
-      req.scope = { type: 'GLOBAL', baseId: null, unitId: null, userId: null };
-      break;
+    switch (role) {
+      case 'SOLDIER':
+        // Only own data — locked to their personnelId
+        scope = { baseId, unitId, personnelId: id };
+        break;
 
-    case ROLES.BASE_ADMIN:
-    case ROLES.QUARTERMASTER:
-      // Base-level scope — all data within their base
-      req.scope = { type: 'BASE', baseId, unitId: null, userId: null };
-      break;
+      case 'SERGEANT':
+        // Sees all personnel in their unit, but not officer-level data
+        scope = { baseId, unitId, sergeantId: id };
+        break;
 
-    case ROLES.OFFICER:
-      // Base-level read, unit-level write
-      req.scope = { type: 'OFFICER', baseId, unitId, userId };
-      break;
+      case 'OFFICER':
+        // Sees full base data
+        scope = { baseId };
+        break;
 
-    case ROLES.TECHNICIAN:
-      // Can only see equipment assigned to them
-      req.scope = { type: 'TECHNICIAN', baseId, unitId, userId };
-      break;
+      case 'QUARTERMASTER':
+      case 'BASE_ADMIN':
+        scope = { baseId };
+        break;
 
-    case ROLES.SOLDIER:
-    default:
-      // Own data only
-      req.scope = { type: 'SELF', baseId, unitId, userId };
-      break;
+      case 'AUDITOR':
+      case 'SYSTEM_ADMIN':
+      case 'SUPER_ADMIN':
+        scope = {}; // No restrictions
+        break;
+
+      default:
+        // Default to most restrictive if unknown role
+        scope = { personnelId: id };
+        break;
+    }
+
+    req.scope = scope;
+    next();
+  } catch (err) {
+    logger.error('scopeFilter middleware error', { error: err.message });
+    return res.status(500).json({ success: false, message: 'Scope processing error' });
   }
-
-  next();
-}
-
-module.exports = scopeFilter;
+};
