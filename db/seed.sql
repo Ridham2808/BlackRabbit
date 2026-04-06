@@ -36,80 +36,90 @@ INSERT INTO units (id, name, code, base_id, description) VALUES
 -- $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxAAAAAAAA
 -- NOTE: regenerate with bcrypt.hashSync('Deas@2024!', 12) in real use
 
-INSERT INTO personnel (id, service_number, full_name, email, phone, password_hash, role, rank, unit_id, base_id, clearance_level) VALUES
+INSERT INTO personnel (id, service_number, full_name, email, phone, password_hash, role, rank, badge_number, unit_id, base_id, clearance_level, token_version) VALUES
   -- Super Admin
   ('c1000000-0000-0000-0000-000000000001',
    'IND-2024-0001', 'Gen. Arjun Mehta',     'arjun.mehta@deas.mil',     '+91-9800000001',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SUPER_ADMIN', 'General', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 5),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SUPER_ADMIN', 'General', 'ADM-0001', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 5, 1),
 
   -- Base Admins
   ('c1000000-0000-0000-0000-000000000002',
    'IND-2024-0002', 'Col. Priya Sharma',    'priya.sharma@deas.mil',    '+91-9800000002',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'BASE_ADMIN', 'Colonel', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 4),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'BASE_ADMIN', 'Colonel', 'ADM-0002', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 4, 1),
   ('c1000000-0000-0000-0000-000000000003',
    'IND-2024-0003', 'Col. Rajiv Nair',      'rajiv.nair@deas.mil',      '+91-9800000003',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'BASE_ADMIN', 'Colonel', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 4),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'BASE_ADMIN', 'Colonel', 'ADM-0003', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 4, 1),
 
-  -- Officers
+  -- OFFICERS (Demo Role: Officer)
   ('c1000000-0000-0000-0000-000000000004',
    'IND-2024-0004', 'Major Vikram Singh',   'vikram.singh@deas.mil',    '+91-9800000004',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'OFFICER', 'Major', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 3),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'OFFICER', 'Major', 'OFF-0091', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 3, 1),
   ('c1000000-0000-0000-0000-000000000005',
    'IND-2024-0005', 'Capt. Ananya Reddy',   'ananya.reddy@deas.mil',    '+91-9800000005',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'OFFICER', 'Captain', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 3),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'OFFICER', 'Captain', 'OFF-0092', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 3, 1),
   ('c1000000-0000-0000-0000-000000000006',
    'IND-2024-0006', 'Lt. Rohit Verma',      'rohit.verma@deas.mil',     '+91-9800000006',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'OFFICER', 'Lieutenant', 'b1000000-0000-0000-0000-000000000007', 'a1000000-0000-0000-0000-000000000003', 3),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'OFFICER', 'Lieutenant', 'OFF-0093', 'b1000000-0000-0000-0000-000000000007', 'a1000000-0000-0000-0000-000000000003', 3, 1),
+
+  -- SERGEANTS (Demo Role: Sergeant) — NEW
+  ('c1000000-0000-0000-0000-000000000016',
+   'IND-2024-SGT1', 'Sgt. Mehta Suresh',   'mehta.suresh@deas.mil',    '+91-9800000016',
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SERGEANT', 'Sergeant', 'SGT-2201', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 2, 1),
+  ('c1000000-0000-0000-0000-000000000017',
+   'IND-2024-SGT2', 'Sgt. Rajan Pillai',   'rajan.pillai@deas.mil',    '+91-9800000017',
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SERGEANT', 'Sergeant', 'SGT-2202', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 2, 1),
 
   -- Quartermasters
   ('c1000000-0000-0000-0000-000000000007',
    'IND-2024-0007', 'Sgt. Deepak Patel',    'deepak.patel@deas.mil',    '+91-9800000007',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'QUARTERMASTER', 'Sergeant', 'b1000000-0000-0000-0000-000000000003', 'a1000000-0000-0000-0000-000000000001', 3),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'QUARTERMASTER', 'Sergeant', 'QM-3301', 'b1000000-0000-0000-0000-000000000003', 'a1000000-0000-0000-0000-000000000001', 3, 1),
   ('c1000000-0000-0000-0000-000000000008',
    'IND-2024-0008', 'Sgt. Meena Krishnan',  'meena.krishnan@deas.mil',  '+91-9800000008',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'QUARTERMASTER', 'Sergeant', 'b1000000-0000-0000-0000-000000000006', 'a1000000-0000-0000-0000-000000000002', 3),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'QUARTERMASTER', 'Sergeant', 'QM-3302', 'b1000000-0000-0000-0000-000000000006', 'a1000000-0000-0000-0000-000000000002', 3, 1),
 
   -- Auditors
   ('c1000000-0000-0000-0000-000000000009',
    'IND-2024-0009', 'Maj. Suresh Iyer',     'suresh.iyer@deas.mil',     '+91-9800000009',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'AUDITOR', 'Major', 'b1000000-0000-0000-0000-000000000002', 'a1000000-0000-0000-0000-000000000001', 4),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'AUDITOR', 'Major', 'AUD-4401', 'b1000000-0000-0000-0000-000000000002', 'a1000000-0000-0000-0000-000000000001', 4, 1),
 
   -- Technicians
   ('c1000000-0000-0000-0000-000000000010',
    'IND-2024-0010', 'Cpl. Amrit Rao',       'amrit.rao@deas.mil',       '+91-9800000010',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'TECHNICIAN', 'Corporal', 'b1000000-0000-0000-0000-000000000003', 'a1000000-0000-0000-0000-000000000001', 2),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'TECHNICIAN', 'Corporal', 'TEC-5501', 'b1000000-0000-0000-0000-000000000003', 'a1000000-0000-0000-0000-000000000001', 2, 1),
 
-  -- Soldiers (5 soldiers for checkout demos)
+  -- SOLDIERS (Demo Role: Soldier) — assigned to Sgt. Mehta Suresh (c16)
   ('c1000000-0000-0000-0000-000000000011',
    'IND-2024-0011', 'Pvt. Karan Gupta',     'karan.gupta@deas.mil',     '+91-9800000011',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SOLDIER', 'Private', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 1),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SOLDIER', 'Private', 'SLD-4421', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 1, 1),
   ('c1000000-0000-0000-0000-000000000012',
    'IND-2024-0012', 'Pvt. Neha Joshi',      'neha.joshi@deas.mil',      '+91-9800000012',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SOLDIER', 'Private', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 1),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SOLDIER', 'Private', 'SLD-4422', 'b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 1, 1),
   ('c1000000-0000-0000-0000-000000000013',
    'IND-2024-0013', 'Cpl. Arun Kumar',      'arun.kumar@deas.mil',      '+91-9800000013',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SOLDIER', 'Corporal', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 1),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SOLDIER', 'Corporal', 'SLD-4423', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 1, 1),
   ('c1000000-0000-0000-0000-000000000014',
    'IND-2024-0014', 'Pvt. Sunita Bose',     'sunita.bose@deas.mil',     '+91-9800000014',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SOLDIER', 'Private', 'b1000000-0000-0000-0000-000000000007', 'a1000000-0000-0000-0000-000000000003', 1),
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SOLDIER', 'Private', 'SLD-4424', 'b1000000-0000-0000-0000-000000000007', 'a1000000-0000-0000-0000-000000000003', 1, 1),
   ('c1000000-0000-0000-0000-000000000015',
-   'IND-2024-0015', 'Sgt. Harish Menon',    'harish.menon@deas.mil',    '+91-9800000015',
-   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6RHiCVcmuAIIxeXRHmBly',
-   'SOLDIER', 'Sergeant', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 2);
+   'IND-2024-0015', 'Cpl. Harish Menon',    'harish.menon@deas.mil',    '+91-9800000015',
+   '$2b$12$dn79bnTvzPsku72mQGjDFO917YjhPnqqjQZWFsVv9hx9u9Ze1oHka',
+   'SOLDIER', 'Corporal', 'SLD-4425', 'b1000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000002', 1, 1);
 
 -- Update commanding officers now that personnel exist
 UPDATE bases SET commanding_officer_id = 'c1000000-0000-0000-0000-000000000002'
@@ -125,6 +135,25 @@ UPDATE units SET commanding_officer_id = 'c1000000-0000-0000-0000-000000000005'
   WHERE id = 'b1000000-0000-0000-0000-000000000004';
 UPDATE units SET commanding_officer_id = 'c1000000-0000-0000-0000-000000000006'
   WHERE id = 'b1000000-0000-0000-0000-000000000007';
+
+-- Assign SERGEANT hierarchy: Sergeants assigned to Officers
+UPDATE personnel SET assigned_officer_id = 'c1000000-0000-0000-0000-000000000004'
+  WHERE id = 'c1000000-0000-0000-0000-000000000016'; -- Sgt. Mehta → Major Vikram
+UPDATE personnel SET assigned_officer_id = 'c1000000-0000-0000-0000-000000000005'
+  WHERE id = 'c1000000-0000-0000-0000-000000000017'; -- Sgt. Rajan → Capt. Ananya
+
+-- Assign SOLDIER hierarchy: Soldiers assigned to Sergeants
+UPDATE personnel SET assigned_sergeant_id = 'c1000000-0000-0000-0000-000000000016'
+  WHERE id IN (
+    'c1000000-0000-0000-0000-000000000011', -- Pvt. Karan Gupta
+    'c1000000-0000-0000-0000-000000000012'  -- Pvt. Neha Joshi
+  ); -- assigned to Sgt. Mehta Suresh
+
+UPDATE personnel SET assigned_sergeant_id = 'c1000000-0000-0000-0000-000000000017'
+  WHERE id IN (
+    'c1000000-0000-0000-0000-000000000013', -- Cpl. Arun Kumar
+    'c1000000-0000-0000-0000-000000000015'  -- Cpl. Harish Menon
+  ); -- assigned to Sgt. Rajan Pillai
 
 -- ============================================================
 -- EQUIPMENT CATEGORIES (12 categories)
@@ -441,7 +470,7 @@ VALUES
 -- ALERTS (6 pre-seeded alerts)
 -- ============================================================
 INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_id, checkout_id, base_id, status, auto_generated) VALUES
-  ('g1000000-0000-0000-0000-000000000001',
+  ('71000000-0000-0000-0000-000000000001',
    'OVERDUE_RETURN', 'HIGH',
    'Overdue: Extended Care Medical Kit',
    'MED-2024-00002 checked out by Pvt. Neha Joshi is 4 hours overdue. Expected return was ' || (NOW() - INTERVAL '4 hours')::TEXT,
@@ -451,7 +480,7 @@ INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_
    'a1000000-0000-0000-0000-000000000001',
    'OPEN', true),
 
-  ('g1000000-0000-0000-0000-000000000002',
+  ('71000000-0000-0000-0000-000000000002',
    'EQUIPMENT_MISSING', 'CRITICAL',
    'Missing: Body Armor ARM-2024-00002',
    'Body armor vest assigned to Echo Medical unit has been reported missing. Last known location: Eastern Outpost Alpha.',
@@ -459,7 +488,7 @@ INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_
    'a1000000-0000-0000-0000-000000000002',
    'OPEN', true),
 
-  ('g1000000-0000-0000-0000-000000000003',
+  ('71000000-0000-0000-0000-000000000003',
    'MAINTENANCE_DUE', 'MEDIUM',
    'Maintenance Due: Skylark I-LEX UAV',
    'DRN-2024-00002 is flagged and overdue for maintenance. Current condition: POOR.',
@@ -467,7 +496,7 @@ INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_
    'a1000000-0000-0000-0000-000000000002',
    'ACKNOWLEDGED', true),
 
-  ('g1000000-0000-0000-0000-000000000004',
+  ('71000000-0000-0000-0000-000000000004',
    'ANOMALY_DETECTED', 'HIGH',
    'Anomaly: Unusual Login Pattern Detected',
    'ML anomaly detection flagged unusual login activity from service number IND-2024-0011 outside of normal duty hours.',
@@ -476,7 +505,7 @@ INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_
    'a1000000-0000-0000-0000-000000000001',
    'OPEN', true),
 
-  ('g1000000-0000-0000-0000-000000000005',
+  ('71000000-0000-0000-0000-000000000005',
    'TRANSFER_PENDING_APPROVAL', 'MEDIUM',
    'Transfer Pending: Mahindra Armado VEH-2024-00002',
    'Vehicle transfer from Western Desert Command to Northern Command HQ is awaiting receiver approval.',
@@ -484,7 +513,7 @@ INSERT INTO alerts (id, type, severity, title, message, equipment_id, personnel_
    'a1000000-0000-0000-0000-000000000003',
    'OPEN', true),
 
-  ('g1000000-0000-0000-0000-000000000006',
+  ('71000000-0000-0000-0000-000000000006',
    'EQUIPMENT_DAMAGED', 'MEDIUM',
    'Flagged Equipment: Skylark I-LEX UAV in POOR condition',
    'UAV DRN-2024-00002 condition has degraded to POOR. Immediate inspection required.',
@@ -522,7 +551,7 @@ INSERT INTO transfer_requests (
   sender_approved_at, receiver_approved_at, dispatched_at,
   dispatch_latitude, dispatch_longitude
 ) VALUES (
-  'h1000000-0000-0000-0000-000000000001',
+  '81000000-0000-0000-0000-000000000001',
   'e1000000-0000-0000-0000-000000000010', 'VEH-2024-00002', 'INTER_BASE',
   'a1000000-0000-0000-0000-000000000003', 'b1000000-0000-0000-0000-000000000007',
   'a1000000-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
@@ -588,7 +617,7 @@ VALUES
   ('EQUIPMENT_CHECKOUT', 'c1000000-0000-0000-0000-000000000011', 'Pvt. Karan Gupta', 'SOLDIER', 'IND-2024-0011', 'CHECKOUT', 'f1000000-0000-0000-0000-000000000001', 'AK-203 Assault Rifle', 'MOBILE', 'INFO'),
   ('BIOMETRIC_SUCCESS', 'c1000000-0000-0000-0000-000000000011', 'Pvt. Karan Gupta', 'SOLDIER', 'IND-2024-0011', 'PERSONNEL', 'c1000000-0000-0000-0000-000000000011', 'Pvt. Karan Gupta', 'MOBILE', 'INFO'),
   ('EQUIPMENT_CHECKOUT', 'c1000000-0000-0000-0000-000000000013', 'Cpl. Arun Kumar', 'SOLDIER', 'IND-2024-0013', 'CHECKOUT', 'f1000000-0000-0000-0000-000000000002', 'FLIR Breach PTQ136 Thermal', 'MOBILE', 'INFO'),
-  ('ALERT_CREATED', 'c1000000-0000-0000-0000-000000000007', 'Sgt. Deepak Patel', 'QUARTERMASTER', 'IND-2024-0007', 'ALERT', 'g1000000-0000-0000-0000-000000000001', 'Overdue: Extended Care Medical Kit', 'SYSTEM', 'WARNING'),
+  ('ALERT_CREATED', 'c1000000-0000-0000-0000-000000000007', 'Sgt. Deepak Patel', 'QUARTERMASTER', 'IND-2024-0007', 'ALERT', '71000000-0000-0000-0000-000000000001', 'Overdue: Extended Care Medical Kit', 'SYSTEM', 'WARNING'),
   ('INCIDENT_REPORTED', 'c1000000-0000-0000-0000-000000000008', 'Sgt. Meena Krishnan', 'QUARTERMASTER', 'IND-2024-0008', 'EQUIPMENT', 'e1000000-0000-0000-0000-000000000014', 'Body Armor Vest Missing', 'WEB', 'CRITICAL'),
   ('ANOMALY_DETECTED', NULL, 'SYSTEM', 'SYSTEM', NULL, 'PERSONNEL', 'c1000000-0000-0000-0000-000000000011', 'Pvt. Karan Gupta', 'SYSTEM', 'WARNING');
 
