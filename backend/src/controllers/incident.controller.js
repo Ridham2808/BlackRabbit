@@ -1,8 +1,8 @@
 // ============================================================
-// INCIDENT CONTROLLER
+// ADVANCED INCIDENT CONTROLLER
 // ============================================================
 const incidentService = require('../services/incident.service');
-const { sendSuccess, sendCreated } = require('../utils/responseFormatter');
+const { sendSuccess, sendCreated, sendError } = require('../utils/responseFormatter');
 
 module.exports = {
   async list(req, res) {
@@ -16,17 +16,40 @@ module.exports = {
   },
 
   async report(req, res) {
+    // Expects: { equipment_ids: [], type, severity, description, last_known_latitude... }
     const record = await incidentService.reportIncident(req.body, req.user);
-    sendCreated(res, record, 'Incident reported');
+    sendCreated(res, record, 'Incident reported successfully');
   },
 
-  async update(req, res) {
-    const record = await incidentService.updateIncident(req.params.id, req.body, req.user);
-    sendSuccess(res, record, 'Incident updated');
+  async captureWitnessStatement(req, res) {
+    const { id } = req.params;
+    const record = await incidentService.captureWitnessStatement(id, req.body, req.user);
+    sendCreated(res, record, 'Witness statement captured');
   },
 
-  async close(req, res) {
-    const record = await incidentService.closeIncident(req.params.id, req.body.resolution_notes, req.user);
-    sendSuccess(res, record, 'Incident closed');
+  async acknowledgeStolenReport(req, res) {
+    const { id } = req.params;
+    const record = await incidentService.acknowledgeStolenReport(id, req.body, req.user);
+    sendSuccess(res, record, 'Stolen report acknowledged by CO');
+  },
+
+  async addInvestigationEntry(req, res) {
+    const { id } = req.params;
+    const { entry } = req.body;
+    const record = await incidentService.addInvestigationEntry(id, entry, req.user);
+    sendSuccess(res, record, 'Investigation entry added');
+  },
+
+  async uploadEvidence(req, res) {
+    if (!req.file) return sendError(res, 'No file uploaded', 400);
+    const { id } = req.params;
+    const record = await incidentService.uploadEvidence(id, req.file, req.user);
+    sendSuccess(res, record, 'Evidence file uploaded and hashed');
+  },
+
+  async resolve(req, res) {
+    const { id } = req.params;
+    const record = await incidentService.resolveIncident(id, req.body, req.user);
+    sendSuccess(res, record, 'Incident resolved and accountability scores updated');
   },
 };
