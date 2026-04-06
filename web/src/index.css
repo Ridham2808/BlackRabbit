@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* ── Light Palette ─────────────────────────────── */
+  --color-tactical-950: #f8fafc;
+  --color-tactical-900: #f1f5f9;
+  --color-tactical-800: #e2e8f0;
+  
+  --color-olive-500: #e84c35;
+  --color-olive-400: #f87171;
+  --color-olive-300: #fca5a5;
+  
+  --color-steel-600: #3b82f6;
+  --color-steel-500: #60a5fa;
+
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── Base Styles ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: #dce3ea;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ── Common Utilities ───────────────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+/* glass-card → white card (no more dark glassmorphism) */
+.glass-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+/* Standard page content wrapper */
+.page-content {
+  padding: 28px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.outline-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 1px solid #e2e8f0; border-radius: 9px; padding: 6px 12px;
+  background: #fafafa; font-size: 13px; color: #374151; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.outline-btn:hover { background: #f1f5f9; }
+
+.tag-pill { background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; display: inline-block; }
+
+/* ── Status Badge Colors ─────────────────────────────────── */
+.badge-operational   { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.badge-checked-out   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.badge-maintenance   { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-lost          { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.badge-missing       { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.badge-flagged       { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+.badge-in-transit    { background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.badge-decommissioned{ background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+.severity-critical { color: #dc2626; }
+
+/* ── Compatibility aliases ─────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead tr { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+.data-table thead th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; white-space: nowrap; }
+.data-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+.data-table tbody tr:hover { background: #f8fafc; }
+.data-table tbody td { padding: 12px 16px; font-size: 13px; color: #374151; font-weight: 500; }
+
+.input-field {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #111827;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  font-family: inherit;
+  cursor: default;
+}
+.input-field:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.input-field::placeholder { color: #9ca3af; }
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn-secondary:hover { background: #f1f5f9; color: #111827; }
+.severity-high     { color: #ea580c; }
+.severity-medium   { color: #d97706; }
+.severity-low      { color: #2563eb; }
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-slide-in   { animation: slide-in-right 0.3s ease-out; }
+.animate-count-up   { animation: count-up 0.5s ease-out; }
+
+/* ── Table ───────────────────────────────────────────────── */
+.deas-table { width: 100%; border-collapse: collapse; }
+.deas-table thead tr { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+.deas-table thead th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; white-space: nowrap; }
+.deas-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+.deas-table tbody tr:hover { background: #f8fafc; }
+.deas-table tbody td { padding: 12px 16px; font-size: 13px; color: #374151; font-weight: 500; }
+
+/* ── Form inputs ─────────────────────────────────────────── */
+.deas-input {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #111827;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  font-family: inherit;
+}
+.deas-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+.deas-input::placeholder { color: #9ca3af; }
+
+.deas-select {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+}
+.deas-select:focus { border-color: #3b82f6; }
+.deas-select option { background: #fff; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn-primary {
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn-primary:hover { background: #1f2937; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-danger {
+  background: #e84c35;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn-danger:hover { background: #dc2626; transform: translateY(-1px); }
+
+.btn-ghost {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn-ghost:hover { background: #f1f5f9; color: #111827; }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ── Pulse Red Animation for Lost/Stolen/Missing status ───── */
+@keyframes pulse-red {
+  0% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+  100% { opacity: 0.3; transform: scale(0.95); }
+}
