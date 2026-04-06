@@ -1,0 +1,45 @@
+// ============================================================
+// INCIDENT CONSTANTS
+// Accountability Score Deductions and Restorations
+// ============================================================
+
+const ACCOUNTABILITY_SCORE_DEDUCTIONS = {
+  LOST_FOUND_QUICKLY: 5,
+  LOST_PERMANENTLY: 20,
+  DAMAGED_REPAIRABLE: 10,
+  DAMAGED_BEYOND_REPAIR: 25,
+  STOLEN_RECOVERED: 15,
+  STOLEN_NOT_RECOVERED: 40,
+  NOT_AT_FAULT: 0,
+};
+
+const ACCOUNTABILITY_SCORE_RESTORATIONS = {
+  WITHIN_24_HOURS: 0.8, // 80% restoration
+  WITHIN_72_HOURS: 0.5, // 50% restoration
+  AFTER_72_HOURS: 0.2,  // 20% restoration
+};
+
+const INCIDENT_STATUS = {
+  OPEN: 'OPEN',
+  UNDER_INVESTIGATION: 'UNDER_INVESTIGATION',
+  CO_ACKNOWLEDGED: 'CO_ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  ESCALATED: 'ESCALATED',
+};
+
+const INCIDENT_TYPES = {
+  DAMAGED: 'DAMAGED',
+  LOST: 'LOST',
+  STOLEN: 'STOLEN',
+  DESTROYED: 'DESTROYED',
+  FOUND: 'FOUND',
+  TAMPERED: 'TAMPERED',
+};
+
+module.exports = {
+  ACCOUNTABILITY_SCORE_DEDUCTIONS,
+  ACCOUNTABILITY_SCORE_RESTORATIONS,
+  INCIDENT_STATUS,
+  INCIDENT_TYPES,
+};
