@@ -10,12 +10,35 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
   redis_data:
   uploads_data:
   ai_models:
   backend_logs:
 
 services:
+
+  # ─── PostgreSQL 15 ──────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: deas_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-deas}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - defence-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-deas}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   # ─── Redis 7 ──────────────────────────────────────────────
   redis:
