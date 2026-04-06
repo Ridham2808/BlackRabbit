@@ -45,6 +45,9 @@ const PERMISSIONS = {
   INCIDENT_REPORT:          'incident:report',
   INCIDENT_INVESTIGATE:     'incident:investigate',
   INCIDENT_CLOSE:           'incident:close',
+  INCIDENT_WITNESS_SUBMIT:  'incident:witness_submit',
+  INCIDENT_CO_ACKNOWLEDGE:  'incident:co_acknowledge',
+  INCIDENT_RESOLVE:         'incident:resolve',
 
   // Alerts
   ALERT_VIEW:               'alert:view',
