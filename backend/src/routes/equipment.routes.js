@@ -8,6 +8,7 @@ const { PERMISSIONS } = require('../constants/permissions');
 
 router.use(authenticate);
 
+router.get('/categories',      authorize(PERMISSIONS.EQUIPMENT_VIEW),         ctrl.listCategories);
 router.get('/',                  authorize(PERMISSIONS.EQUIPMENT_VIEW),         validate(listEquipmentSchema, 'query'), ctrl.list);
 router.get('/stats/dashboard',   authorize(PERMISSIONS.EQUIPMENT_VIEW),         ctrl.dashboardStats);
 router.get('/serial/:serial',    authorize(PERMISSIONS.EQUIPMENT_VIEW),         ctrl.getBySerial);
