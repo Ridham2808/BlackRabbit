@@ -9,6 +9,30 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE EXTENSION IF NOT EXISTS "vector";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
+-- Clean up existing tables (reverse order of creation)
+DROP VIEW IF EXISTS v_open_alerts_summary CASCADE;
+DROP VIEW IF EXISTS v_equipment_status_by_base CASCADE;
+DROP VIEW IF EXISTS v_active_checkouts CASCADE;
+DROP TABLE IF EXISTS offline_sync_queue CASCADE;
+DROP TABLE IF EXISTS geofence_zones CASCADE;
+DROP TABLE IF EXISTS location_pings CASCADE;
+DROP TABLE IF EXISTS checkout_records CASCADE;
+DROP TABLE IF EXISTS incident_reports CASCADE;
+DROP TABLE IF EXISTS transfer_requests CASCADE;
+DROP TABLE IF EXISTS maintenance_records CASCADE;
+DROP TABLE IF EXISTS alerts CASCADE;
+DROP TABLE IF EXISTS audit_logs CASCADE;
+DROP TABLE IF EXISTS custody_chain CASCADE;
+DROP TABLE IF EXISTS equipment_vectors CASCADE;
+DROP TABLE IF EXISTS equipment CASCADE;
+DROP TABLE IF EXISTS equipment_categories CASCADE;
+DROP TABLE IF EXISTS personnel CASCADE;
+DROP TABLE IF EXISTS units CASCADE;
+DROP TABLE IF EXISTS bases CASCADE;
+DROP FUNCTION IF EXISTS generate_incident_number CASCADE;
+DROP SEQUENCE IF EXISTS incident_number_seq CASCADE;
+DROP FUNCTION IF EXISTS trigger_set_updated_at CASCADE;
+
 -- ============================================================
 -- UTILITY: auto-update updated_at trigger
 -- ============================================================
@@ -33,6 +57,7 @@ CREATE TABLE bases (
   address               TEXT,
   commanding_officer_id UUID,          -- FK added after personnel
   is_active             BOOLEAN NOT NULL DEFAULT true,
+  is_deleted            BOOLEAN NOT NULL DEFAULT false,
   created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT uq_bases_name  UNIQUE (name),
@@ -54,6 +79,7 @@ CREATE TABLE units (
   commanding_officer_id UUID,          -- FK added after personnel
   description           TEXT,
   is_active             BOOLEAN NOT NULL DEFAULT true,
+  is_deleted            BOOLEAN NOT NULL DEFAULT false,
   created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT uq_units_code UNIQUE (code)
@@ -78,10 +104,15 @@ CREATE TABLE personnel (
   password_hash         VARCHAR(255) NOT NULL,
   role                  VARCHAR(30)  NOT NULL,
   rank                  VARCHAR(50)  NOT NULL,
+  badge_number          VARCHAR(20),
   unit_id               UUID REFERENCES units(id) ON DELETE SET NULL,
   base_id               UUID REFERENCES bases(id) ON DELETE SET NULL,
   clearance_level       INTEGER NOT NULL DEFAULT 1,
+  token_version         INTEGER NOT NULL DEFAULT 1,
+  assigned_sergeant_id  UUID,           -- FK added after table (SOLDIER -> SERGEANT)
+  assigned_officer_id   UUID,           -- FK added after table (SERGEANT -> OFFICER)
   is_active             BOOLEAN NOT NULL DEFAULT true,
+  is_deleted            BOOLEAN NOT NULL DEFAULT false,
   last_login_at         TIMESTAMPTZ,
   failed_login_count    INTEGER NOT NULL DEFAULT 0,
   locked_until          TIMESTAMPTZ,
@@ -94,8 +125,9 @@ CREATE TABLE personnel (
   updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT uq_personnel_service_number UNIQUE (service_number),
   CONSTRAINT uq_personnel_email          UNIQUE (email),
+  CONSTRAINT uq_personnel_badge_number   UNIQUE (badge_number),
   CONSTRAINT chk_personnel_role CHECK (
-    role IN ('SOLDIER','OFFICER','QUARTERMASTER','BASE_ADMIN','AUDITOR','TECHNICIAN','SUPER_ADMIN')
+    role IN ('SOLDIER','SERGEANT','OFFICER','QUARTERMASTER','BASE_ADMIN','AUDITOR','TECHNICIAN','SUPER_ADMIN')
   ),
   CONSTRAINT chk_personnel_clearance CHECK (clearance_level BETWEEN 1 AND 5)
 );
@@ -117,6 +149,17 @@ ALTER TABLE bases ADD CONSTRAINT fk_bases_commanding_officer
 
 ALTER TABLE units ADD CONSTRAINT fk_units_commanding_officer
   FOREIGN KEY (commanding_officer_id) REFERENCES personnel(id) ON DELETE SET NULL;
+
+-- Self-referencing FKs for role hierarchy
+ALTER TABLE personnel ADD CONSTRAINT fk_personnel_assigned_sergeant
+  FOREIGN KEY (assigned_sergeant_id) REFERENCES personnel(id) ON DELETE SET NULL;
+
+ALTER TABLE personnel ADD CONSTRAINT fk_personnel_assigned_officer
+  FOREIGN KEY (assigned_officer_id) REFERENCES personnel(id) ON DELETE SET NULL;
+
+CREATE INDEX idx_personnel_assigned_sergeant ON personnel(assigned_sergeant_id);
+CREATE INDEX idx_personnel_assigned_officer  ON personnel(assigned_officer_id);
+CREATE INDEX idx_personnel_badge_number      ON personnel(badge_number);
 
 -- ============================================================
 -- TABLE 4: equipment_categories
@@ -750,6 +793,7 @@ CREATE TABLE geofence_zones (
   alert_on_exit           BOOLEAN     NOT NULL DEFAULT true,
   applicable_to_roles     TEXT[],
   is_active               BOOLEAN     NOT NULL DEFAULT true,
+  is_deleted              BOOLEAN     NOT NULL DEFAULT false,
   created_by              UUID        REFERENCES personnel(id) ON DELETE SET NULL,
   created_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
