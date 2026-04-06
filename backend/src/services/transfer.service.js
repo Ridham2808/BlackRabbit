@@ -37,7 +37,8 @@ async function createTransfer(data, user) {
     eRows[0].home_unit_id, eRows[0].home_base_id, to_unit_id, to_base_id, reason, notes,
   ]);
 
-  await pool.query('UPDATE equipment SET status = $2, updated_at = NOW() WHERE id = $1', [equipment_id, EQUIPMENT_STATUS.IN_TRANSIT]);
+  // Flag equipment as PENDING_TRANSFER or similar
+  await pool.query('UPDATE equipment SET status = $2, updated_at = NOW() WHERE id = $1', [equipment_id, EQUIPMENT_STATUS.FLAGGED]);
 
   auditService.createLog({ action: AUDIT_ACTIONS.TRANSFER_REQUESTED, performedBy: user, targetEntityType: 'TRANSFER', targetEntityId: rows[0].id });
   emitTransferStatusChanged(user.base_id, rows[0]);
@@ -61,6 +62,9 @@ async function dispatchTransfer(id, data, user) {
   const { dispatch_latitude, dispatch_longitude } = data;
   const { rows } = await pool.query(TRANSFER_QUERIES.DISPATCH, [id, dispatch_latitude, dispatch_longitude]);
   if (!rows[0]) throw Object.assign(new Error('Transfer not found'), { statusCode: 404 });
+
+  // Now set equipment to IN_TRANSIT
+  await pool.query('UPDATE equipment SET status = $2, updated_at = NOW() WHERE id = $1', [rows[0].equipment_id, EQUIPMENT_STATUS.IN_TRANSIT]);
   auditService.createLog({ action: AUDIT_ACTIONS.TRANSFER_DISPATCHED, performedBy: user, targetEntityType: 'TRANSFER', targetEntityId: id });
   return rows[0];
 }
