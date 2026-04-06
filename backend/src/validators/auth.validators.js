@@ -4,10 +4,14 @@
 const Joi = require('joi');
 
 const loginSchema = Joi.object({
-  email:       Joi.string().email().required(),
-  password:    Joi.string().min(6).required(),
-  deviceToken: Joi.string().optional(),
-  deviceType:  Joi.string().valid('WEB','MOBILE').default('WEB'),
+  serviceNumber: Joi.string().min(8).max(20).required(),
+  password:      Joi.string().min(8).required(),
+  deviceInfo:    Joi.object({
+    deviceId:    Joi.string().optional(),
+    deviceModel: Joi.string().optional(),
+    osVersion:   Joi.string().optional(),
+    appVersion:  Joi.string().optional(),
+  }).optional(),
 });
 
 const refreshSchema = Joi.object({
