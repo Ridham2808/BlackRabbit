@@ -1,6 +1,7 @@
 // ============================================================
 // EQUIPMENT CONTROLLER
 // ============================================================
+const { pool } = require('../config/database');
 const equipmentService = require('../services/equipment.service');
 const { sendSuccess, sendCreated } = require('../utils/responseFormatter');
 
@@ -8,6 +9,11 @@ module.exports = {
   async list(req, res) {
     const result = await equipmentService.listEquipment(req.user, req.query);
     sendSuccess(res, result);
+  },
+
+  async listCategories(req, res) {
+    const { rows } = await pool.query('SELECT * FROM equipment_categories ORDER BY display_name ASC');
+    sendSuccess(res, rows);
   },
 
   async getById(req, res) {
@@ -46,12 +52,22 @@ module.exports = {
   },
 
   async getCustodyChain(req, res) {
-    const { pool } = require('../config/database');
+    const { id: eqId } = req.params;
+    const { role, id: userId } = req.user;
+    
+    let roleFilter = '';
+    const params = [eqId];
+    
+    if (role === 'SOLDIER') {
+      roleFilter = `AND (cc.to_custodian_id = $2 OR cc.from_custodian_id = $2 OR cc.performed_by_id = $2)`;
+      params.push(userId);
+    }
+
     const { rows } = await pool.query(
       `SELECT cc.*, e.name AS equipment_name FROM custody_chain cc
        LEFT JOIN equipment e ON e.id = cc.equipment_id
-       WHERE cc.equipment_id = $1 ORDER BY cc.timestamp DESC`,
-      [req.params.id]
+       WHERE cc.equipment_id = $1 ${roleFilter} ORDER BY cc.timestamp DESC`,
+      params
     );
     sendSuccess(res, rows);
   },
