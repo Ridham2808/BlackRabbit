@@ -49,17 +49,19 @@ const CHECKOUT_QUERIES = {
       approved_by_id, purpose, expected_return_at,
       actual_checkout_at, status, condition_on_checkout,
       digital_signature_data, biometric_verified, biometric_type,
-      checkout_latitude, checkout_longitude, checkout_base_id
+      checkout_latitude, checkout_longitude, checkout_base_id,
+      request_id
     ) VALUES (
       $1, $2, $3, $4, $5, $6, $7, $8, $9,
-      NOW(), 'ACTIVE', $10, $11, $12, $13, $14, $15, $16
+      COALESCE($18::timestamptz, NOW()), 'ACTIVE', $10, $11, $12, $13, $14, $15, $16,
+      $17
     ) RETURNING *
   `,
 
   CHECK_IN: `
     UPDATE checkout_records
     SET status = 'RETURNED',
-        actual_return_at = NOW(),
+        actual_return_at = COALESCE($6::timestamptz, NOW()),
         condition_on_return = $2,
         return_latitude = $3,
         return_longitude = $4,
