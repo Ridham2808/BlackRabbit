@@ -36,9 +36,12 @@ const auditRoutes      = require('./src/routes/audit.routes');
 const locationRoutes   = require('./src/routes/location.routes');
 const reportRoutes     = require('./src/routes/report.routes');
 const adminRoutes      = require('./src/routes/admin.routes');
+const officerRoutes    = require('./src/routes/officer.routes');
+const sergeantRoutes   = require('./src/routes/sergeant.routes');
 const searchRoutes     = require('./src/routes/search.routes');
 const syncRoutes       = require('./src/routes/sync.routes');
 
+const checkoutRequestRoutes = require('./src/routes/checkoutRequest.routes');
 const app = express();
 
 // ── Security headers ─────────────────────────────────────────
@@ -109,6 +112,7 @@ app.get('/api/health', async (req, res) => {
 // ── API routes ───────────────────────────────────────────────
 app.use('/api/auth',        authRoutes);
 app.use('/api/equipment',   equipmentRoutes);
+app.use('/api/checkouts/requests', checkoutRequestRoutes);
 app.use('/api/checkouts',   checkoutRoutes);
 app.use('/api/personnel',   personnelRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
@@ -119,6 +123,8 @@ app.use('/api/audit',       auditRoutes);
 app.use('/api/location',    locationRoutes);
 app.use('/api/reports',     reportRoutes);
 app.use('/api/admin',       adminRoutes);
+app.use('/api/officer',     officerRoutes);   // Officer admin panel
+app.use('/api/sergeant',    sergeantRoutes);  // Sergeant unit management
 app.use('/api/search',      searchRoutes);
 app.use('/api/sync',        syncRoutes);
 
