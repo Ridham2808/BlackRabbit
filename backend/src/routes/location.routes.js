@@ -9,6 +9,7 @@ const { PERMISSIONS } = require('../constants/permissions');
 router.use(authenticate);
 
 router.post('/ping',                    authorize(PERMISSIONS.LOCATION_PING), validate(locationPingSchema), ctrl.ping);
+router.get('/latest',                   authorize(PERMISSIONS.LOCATION_VIEW), ctrl.latest);
 router.get('/live',                     authorize(PERMISSIONS.LOCATION_VIEW), ctrl.livePositions);
 router.get('/equipment/:equipmentId',   authorize(PERMISSIONS.LOCATION_VIEW), ctrl.equipmentTrack);
 
